@@ -1,8 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from . import serializers
+from . import serializers,models
 from rest_framework import status
+from . import permission
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.filters import SearchFilter
 from rest_framework import viewsets
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 class HelloApiView(APIView):
     """Test API"""
     serializer=serializers.UserSerilizer
@@ -55,3 +60,15 @@ class HelloViewSet(viewsets.ViewSet):
         return Response({'method':'PATCH'})
     def destroy(self,request,pk=None):
         return Response({'method':'DELETE'})
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.UserProfileSerilizer
+    queryset = models.UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permission.UpdateOwnProfile,)
+    filter_backends = (SearchFilter,)
+    search_fields ={'name','email',}
+
+class UserLoginApiView(ObtainAuthToken):
+      renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
