@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
-
+from RestProfile import settings
 
 class UserProfileManger(BaseUserManager):
 
@@ -27,7 +27,6 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     objects = UserProfileManger()
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
     def get_full_name(self):
@@ -36,5 +35,16 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
         return self.name
     def __str__(self):
         return self.email
+
+
+class ProfileFeedItem(models.Model):
+    user_profile = models.ForeignKey(settings.AUTH_USER_MODEL ,on_delete=models.CASCADE)
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.status_text
+
+
+
 
 # Create your models here.

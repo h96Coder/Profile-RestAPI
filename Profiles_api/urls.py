@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 router =DefaultRouter()
 router.register('HelloViewSet',views.HelloViewSet,base_name='HelloViewSet')
 router.register('Profiles',views.UserProfileViewSet)
+router.register('feed',views.UserProfileFeedViewSet)
 
 
 urlpatterns=[
